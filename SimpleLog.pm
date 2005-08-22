@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use POSIX qw(strftime);
 
-$VERSION = '0.01';
+my $VERSION = '0.03';
 
 =head1 new()
     Author: Trevor Hall (trevorhall)
