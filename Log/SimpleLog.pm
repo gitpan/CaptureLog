@@ -3,14 +3,19 @@ use strict;
 use warnings;
 use POSIX qw(strftime);
 
-my $VERSION = '0.03';
+$VERSION = '0.03';
 
 =head1 new()
-    Author: Trevor Hall (trevorhall)
-
+  
   Description:
 
     The core constructor for the logging object
+
+  Input:
+
+    $file_name: The absolute file path file source
+                for the log file of which to be 
+                written to.
 
 =cut
 sub new {
@@ -31,12 +36,22 @@ sub new {
 }
 
 =head1 log_message()
-    Author: Trevor Hall (trevorhall)
 
   Description:
 
     Will use the passed string, append the current date and 
     write to the file
+
+  Input:
+
+    $log_string:  The un-formatted scalar value that will
+                  be logged to the file defined through
+                  the constructor.
+
+                  Each line will have a date stamp of
+                  the time of the log, as well as the 
+                  message appended to the end of the 
+                  log.
 
 =cut
 sub log_message {

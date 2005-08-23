@@ -6,7 +6,8 @@ use IO::Capture::Stderr;
 use POSIX qw(strftime);
 our @ISA = qw(Log::SimpleLog);
 
-my $VERSION = '0.03';
+use vars qw($VERSION);
+$VERSION = '0.03';
 
 =head1 new()
 

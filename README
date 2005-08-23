@@ -1,0 +1,12 @@
+Log::SimpleLog::CaptureLog
+
+  Installation
+
+    perl Makefile.PL
+    make
+    make test
+    make install
+    make clean
+
+  This will install the CaptureLog moduel
+  into your Perl directive
