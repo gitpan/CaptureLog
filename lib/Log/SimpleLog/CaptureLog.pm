@@ -7,7 +7,7 @@ use POSIX qw(strftime);
 our @ISA = qw(Log::SimpleLog);
 
 use vars qw($VERSION);
-$VERSION = '0.03';
+$VERSION = '0.05';
 
 =head1 new()
 
@@ -96,16 +96,54 @@ sub new {
     return $this;
 }
 
-=head1 set_core_filepath()
+=head1 open_stdout
 
-  Description:
+DESCRIPTION
 
-    Will set the core log file location to the 
-    object.
+Will open the STDOUT stream back to the shell or another
+directed pipe.
 
-  Input:
+Will no longer capture the STDOUT stream.
+
+Everything that is currently buffered when the method is 
+called will be kept in memory and later piped to the
+appropriate log file
+
+=cut
+sub open_stdout {
+    my ( $this ) = @_;
+    $this->{'_stdout'}->stop ( ) if ( defined ( $this->{'_stderr'} ) );
+}
+
+=head1 open_stderr
+
+DESCRIPTION
+
+Will open the STDERR stream back to the shell or another
+directed pipe.
+
+Will no longer capture the STDERR stream.
+
+Everything that is currently buffered when the method is 
+called will be kept in memory and later piped to the
+appropriate log file
+
+=cut
+sub open_stderr {
+    my ( $this ) = @_;
+    $this->{'_stderr'}->stop ( ) if ( defined ( $this->{'_stderr'} ) );
+}
+
+=head1 set_core_filepath
+
+DESCRIPTION
     
-    $filepath:  The file path location of the log file
+Will set the core log file location to the 
+object.
+
+PARAMETERS    
+
+Arg1 : The file path location of the log file
 
 =cut
 sub set_core_filepath {
@@ -294,11 +332,15 @@ sub _get_current_time {
 sub DESTROY {
     my ( $this ) = @_;
     $this->_flush_log_buffer ( );
+    $this->{'_stdout'}->stop ( );
+    $this->{'_stderr'}->stop ( );
 }
 1;
 
 __END__
-=head1 AUTHOR
+=head1 
+
+AUTHOR
     
     Name:   Trevor Hall 
     E-mail: hallta@gmail.com
@@ -307,5 +349,24 @@ __END__
 =head1 NAME
 
 =head1 DESCRIPTION
+
+A Simple logger that will automajically capture the 
+STDERR and STDOUT streams for you.
+
+Mostly handy when running a process as a cronjob, 
+and you will no longer have to add the '2>&1' to the
+end of the file.
+
+There are many other usefull usages as well
+
+FUNCTIONS
+
+log_message
+
+DEPENDANCIES
+
+IO::Capture::Stdout;
+IO::Capture::Stderr;
+POSIX qw(strftime);
 
 =cut

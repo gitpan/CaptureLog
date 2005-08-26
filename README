@@ -1,12 +1,34 @@
-Log::SimpleLog::CaptureLog
+Log/SimpleLog/CaptureLog version 0.05
+=====================================
 
-  Installation
+This version introduces the full functionality
+and ease of installation available through the 
+CPAN distrobution system.
 
-    perl Makefile.PL
-    make
-    make test
-    make install
-    make clean
+Simply follow the attached documentation for further
+usage of this class.
 
-  This will install the CaptureLog moduel
-  into your Perl directive
+Essential properties:
+ - Will capture STDOUT, pipe to a defined log
+ - Will capture STDERR, pipe to a defined log
+ - Will caputre custom log strings, pipe to 
+   a defined log
+
+INSTALLATION
+
+To install this moule, type the following:
+
+	perl Makefile.PL
+	make
+	make test
+	make install
+
+DEPENDENCIES
+
+	None
+
+COPYRIGHT AND LICENSE
+
+This library is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.
+

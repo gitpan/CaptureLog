@@ -1,0 +1,6 @@
+Changes
+lib/Log/SimpleLog/CaptureLog.pm
+README
+MANIFEST
+Makefile.PL
+t/0-05.1.t

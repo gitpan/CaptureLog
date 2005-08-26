@@ -1,0 +1,16 @@
+CaptureLog.pm
+
+Revision 0.05 - 08.26.2005
+ - Modified Makefile.PL script 
+   for better handling of the 
+   installation package
+ - Generated more rhobust unit
+   testing to include
+ - Finalized the Changes log,
+   MANIFEST and README files
+
+Revision 0.02 - 08.22.2005
+ - Origional submission to CPAN
+
+Version 0.01 - 07.16.2005
+ - Origional implementation
