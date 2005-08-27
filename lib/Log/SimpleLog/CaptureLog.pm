@@ -7,60 +7,8 @@ use POSIX qw(strftime);
 our @ISA = qw(Log::SimpleLog);
 
 use vars qw($VERSION);
-$VERSION = '0.05';
+$VERSION = '0.07';
 
-=head1 new()
-
-  Description:
-
-    The core constructor for the IO::SimpleLog object.
-    Will instantiate and return the log object, wrapped
-    around the log files of the appropriate nature
-
-  Input:
-
-    $core_filepath: The directory location of the log file
-                    which force inputs will be sent to.
-                    
-                    This is an optional parameter and can 
-                    also be set through the set_filepath()
-                    method.
-
-                    By default, if this parameter is set
-                    and any others are not, all 
-                    STDERR and STDOUT output will also
-                    be piped to this log location
-
-    $ex_filepath:   An optional input that will direct the 
-                    location of either the STDERR or STDOUT
-                    log locations.
-
-                    This is an optional parameter and can
-                    also be set through the set_exfilepath()
-                    method.
-
-                    Given this parameter, while the exc_filepath
-                    is empty, both STDERR and STDOUT output will
-                    be piped to this log location and not the
-                    core_filepath.  
-
-    $exc_filepath   Much as the ex_filepath, will pipe the STDERR
-                    output directly to this particular log location.
-
-                    This is an optional parameter and can also be 
-                    set through the set_excfilepath() method.
-
-                    Given the existance of this, as well as the 
-                    ex_filepath, all STDERR will be piped to this
-                    directory while STDOUT will be piped to the
-                    ex_filepath directory.
-
-  Output:
-
-    $this:          The instantiated log wrapper for the file
-                    pipes
-
-=cut                  
 sub new {
     my ( $class , $core_filepath , $ex_filepath , $exc_filepath ) = @_;
     my ( $std_err , $std_out );
@@ -96,160 +44,41 @@ sub new {
     return $this;
 }
 
-=head1 open_stdout
-
-DESCRIPTION
-
-Will open the STDOUT stream back to the shell or another
-directed pipe.
-
-Will no longer capture the STDOUT stream.
-
-Everything that is currently buffered when the method is 
-called will be kept in memory and later piped to the
-appropriate log file
-
-=cut
 sub open_stdout {
     my ( $this ) = @_;
     $this->{'_stdout'}->stop ( ) if ( defined ( $this->{'_stderr'} ) );
 }
 
-=head1 open_stderr
-
-DESCRIPTION
-
-Will open the STDERR stream back to the shell or another
-directed pipe.
-
-Will no longer capture the STDERR stream.
-
-Everything that is currently buffered when the method is 
-called will be kept in memory and later piped to the
-appropriate log file
-
-=cut
 sub open_stderr {
     my ( $this ) = @_;
     $this->{'_stderr'}->stop ( ) if ( defined ( $this->{'_stderr'} ) );
 }
 
-=head1 set_core_filepath
-
-DESCRIPTION
-    
-Will set the core log file location to the 
-object.
-
-PARAMETERS    
-
-Arg1 : The file path location of the log file
-
-=cut
 sub set_core_filepath {
     my ( $this , $filepath ) = @_;
     $this->{'_core_path'} = $filepath;
 }
 
-=head1 set_exfilepath()
-
-  Description:
-
-    Will set the log file location, relative to STDOUT 
-    to the object.
-
-    Without the existance of the excfilepath, STDERR 
-    will also be written to this location.
-
-  Input:
-    
-    $filepath:  The file path location of the log file
-
-=cut
 sub set_exfilepath {
     my ( $this , $filepath ) = @_;
     $this->{'_ex_path'} = $filepath;
 }
 
-=head1 set_excfilepath()
-
-  Description:
-
-    Will set the log file location, relative to STDERR
-    to the object.
-
-    Upon a buffer dump, will write STDERR and STDOUT 
-    to this location without the existance of the
-    exfilepath locale stored.
-    
-  Input:
-    
-    $filepath:  The file path location of the log file
-
-=cut
 sub set_excfilepath {
     my ( $this , $filepath ) = @_;
     $this->{'_exc_path'} = $filepath;
 }
 
-=head1 get_buffer_limit()
-
-  Description:
-
-    Will return the current buffer limit of the
-    logging object
-
-  Output:
-
-    The current log buffer limit; an integer
-    that represents the number of lines that will
-    be stored in memory before dumping to a log file
-    
-=cut
 sub get_buffer_limit {
     my ( $this ) = @_;
     return $this->{'_buffer_limit'};
 }
 
-=head1 set_buffer_limit()
-
-  Description:
-
-    Will set the new buffer limit to the log file
-
-  Input:
-
-    The new log buffer limit; an integer that
-    represents the number of lines that will
-    be stored in memory before dumping to a log
-    file
-
-=cut
 sub set_buffer_limit {
     my ( $this , $buffer_limit ) = @_;
     $this->{'_buffer_limit'} = int ( $buffer_limit );
 }
 
-=head1 log_message()
-
-  Description:
-
-    The standard input for log entries.
-
-    By default, the input message will be formatted into
-    the specified format within the parameters of the 
-    object.  
-
-    The output of this data will be to the location of 
-    the core_filepath location
-
-  Input:
-
-    $log_message:   A string formatted log message to 
-                    be intended to write to the 
-                    core_filepath location
-
-=cut
 sub log_message {
     my ( $this , $log_message ) = @_;
     my ( $local_time );
@@ -338,36 +167,155 @@ sub DESTROY {
 1;
 
 __END__
-=head1 
-
-AUTHOR
-    
-    Name:   Trevor Hall 
-    E-mail: hallta@gmail.com
-    URL:    http://trevorhall.blucorral.com
 
 =head1 NAME
 
+Log::SimpleLog::CaptureLog
+
+=head1 SYNOPSYS
+
+    my $l = new Log::SimpleLog::CaptureLog ( 
+                $standard_log , 
+                $std_out_log , # Optional
+                $std_err_log , # Optional 
+            );
+
+    $l->log_message ( 'Standard log output' );
+    print STDOUT 'STDOUT log output';
+    print STDERR 'STDERR log output';
+
 =head1 DESCRIPTION
 
-A Simple logger that will automajically capture the 
-STDERR and STDOUT streams for you.
+This Perl module class is intended to be a very simple and 
+light-weight logging device with the intent of capturing 
+all the standard out and error messages that are thrown 
+either by an application or by the Perl interpreter its
+self.
 
-Mostly handy when running a process as a cronjob, 
-and you will no longer have to add the '2>&1' to the
-end of the file.
+There are methods listed in the documentation that will
+allow for the changing of any of these rules.  For instance,
+if standard logging with STDERR logging is to be captured,
+but STDOUT should not, there are methods provided to do 
+so.
 
-There are many other usefull usages as well
+=head1 CONSTRUCTOR
 
-FUNCTIONS
+The constructor is passed a minimum of one and a maximum of 
+three of the following arguments, which will provide the 
+object with the location of the log file of which to pipe
+specific output to.
 
-log_message
+The following parameters are intended for use:
 
-DEPENDANCIES
+=over 4
 
-Log::SimleLog
-IO::Capture::Stdout;
-IO::Capture::Stderr;
-POSIX;
+=item core_filepath
 
-=cut
+The core file path for the custom log messages.
+
+Refer to the set_corefilepath method description
+
+=item ex_filepath
+
+This parameter is optional.
+
+The location of the STDOUT file path.
+
+Refer to the set_exfilepath method description.
+
+=item exc_filepath
+
+This parameter is optional.
+
+The location of the STDERR file path.
+
+Refer to the set_excfilepath method description.
+
+=head1 METHODS
+
+=head1 log_message
+
+The standard input for log entries.
+
+By default, the input message will be formatted into
+the specified format within the parameters of the 
+object.  
+
+The output of this data will be to the location of 
+the core_filepath location
+
+head1 set_buffer_limit
+
+The log it's self will be stored into memory until the 
+'buffer limit' has been breached.  The default buffer
+limit is 1024, which implies that there will have to
+be 1024 log lines until the buffer is flushed to the 
+output file.
+
+This method will allow you to adjust this buffer limit
+in order to utilize less memory than the default setting.
+
+Upon destruction of the object, the log will be flushed, 
+no matter the size of the buffer at the time when the 
+object is removed from the heap.
+
+=head1 get_buffer_limit
+
+Will return the current buffer limit as set by the
+set_buffer_limit method, or by the 
+instantiation/construction of the object (1024)
+
+=head1 set_core_filepath
+
+Will set the location of the file of which the custom
+log messages will be written to.
+
+If no other arguments or set_*_filepath methods are called,
+this file will also be the location of the STDOUT and
+STDERR output unless otherwise directed.
+
+=head1 set_exfilepath
+
+Will set the location of the STDOUT file path.
+
+By setting this option, the 'core filepath' will
+only contain the custom log messages sent to the
+logger.
+
+If no other set_*_filepath method is called, then
+both STDOUT and STDERR will be streamed to this 
+log
+
+=head1 set_excfilepath
+
+Similar to the other two set_*_filepath methods,
+this method, when used, will set the STDERR file 
+location.
+
+If no other set_*_filepath methods are called, then
+both STDOUT and STDERR will be streamed to this log.
+
+=head1 open_stdout
+
+Will turn off the capturing of the STDOUT stream
+
+=head1 open_stderr
+
+Will turn off the capturing of the STDERR stream
+
+=head1 AUTHOR
+
+Trevor Hall <hallta@gmail.com>
+
+=head1 DEPENDENCIES
+
+Log::SimpleLog
+IO::Capture::Stdout
+IO::Capture::Stderr
+POSIX
+
+=head1 COPYRIGHT
+
+Copyright (c) 2005 Trevor Hall. All rights reserved. This program is free
+software; you can redistribute it and/or modify it under the same terms as Perl
+itself.
