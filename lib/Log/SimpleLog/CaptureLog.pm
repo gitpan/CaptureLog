@@ -365,8 +365,9 @@ log_message
 
 DEPENDANCIES
 
+Log::SimleLog
 IO::Capture::Stdout;
 IO::Capture::Stderr;
-POSIX qw(strftime);
+POSIX;
 
 =cut

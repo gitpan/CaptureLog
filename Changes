@@ -1,5 +1,9 @@
 CaptureLog.pm
 
+Revision 0.06 - 8.27.2005
+ - Minor update to the DEPENDENCIES portion
+   of the PerlDoc documentation comments
+
 Revision 0.05 - 08.26.2005
  - Modified Makefile.PL script 
    for better handling of the 
