@@ -1,5 +1,12 @@
 CaptureLog.pm
 
+Revision 0.08 - 9.19.2005
+ - Noticed that Perl testing was not 
+   passing because I forgot to note 
+   the Module dependancies in the Make
+   file.  Updated the makefile with 
+   this new revision
+
 Revision 0.07 - 8.27.2005
  - Major revisions to the PerlDoc 
    documentation with better defined

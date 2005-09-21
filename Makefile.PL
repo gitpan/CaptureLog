@@ -4,7 +4,9 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     'NAME'          => 'Log::SimpleLog::CaptureLog',
     'VERSION_FROM'  => 'lib/Log/SimpleLog/CaptureLog.pm', # finds $VERSION
-    'PREREQ_PM'     => {}, # e.g., Module::Name => 1.1
+    'PREREQ_PM'     => { 'IO::Capture::Stdout' => 0 , 
+                         'IO::Capture::Stderr' => 0
+                       }, 
     'ABSTRACT'      => 'CaptureLog - A very simple Perl logging class wrapper for capturing STDERR and STDOUT.  Will allow for a very simplistic method of logging messages throughout any Perl application',
     'AUTHOR'        => 'Trevor Hall',
-);
+)
